@@ -11,13 +11,13 @@ authedRequest.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-const app = express();
+const index = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static('public'));
+index.use(cors());
+index.use(express.json());
+index.use(express.static('public'));
 
-app.post('/chat-gpt', async (req, res) => {
+index.post('/chat-gpt', async (req, res) => {
     try {
         const result = await authedRequest.post(`https://api.openai.com/v1/chat/completions`, req.body);
         const data = result.data;
@@ -30,7 +30,7 @@ app.post('/chat-gpt', async (req, res) => {
     }
 });
 
-app.post('/dalle', async (req, res) => {
+index.post('/dalle', async (req, res) => {
     try {
         const result = await authedRequest.post(`https://api.openai.com/v1/images/generations`, req.body);
         res.status(200).send(result.data);
@@ -42,6 +42,6 @@ app.post('/dalle', async (req, res) => {
     }
 });
 
-app.listen(process.env.PORT || 8000, () => {
+index.listen(process.env.PORT || 8000, () => {
    console.log("The server set up at port 8000");
 });
