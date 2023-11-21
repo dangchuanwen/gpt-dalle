@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const axios = require("axios");
 const express = require("express");
 const cors = require("cors");
@@ -5,7 +7,7 @@ const cors = require("cors");
 const authedRequest = axios.create();
 
 authedRequest.interceptors.request.use(function (config) {
-    config.headers.Authorization = `Bearer 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`;
+    config.headers.Authorization = `Bearer ${process.env.OPEN_API_TOKEN}`;
     return config;
 }, function (error) {
     return Promise.reject(error);
@@ -36,6 +38,7 @@ index.post('/dalle', async (req, res) => {
         res.status(200).send(result.data);
 
     } catch (err) {
+        console.log(err)
         res.status(500).send({
             err: err
         });
