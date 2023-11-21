@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <section>
+        <h1>
+            Chat GPT
+        </h1>
+        <textarea rows="10" cols="30" id="gpt-prompt"></textarea>
+        <button id="gpt-btn">Submit</button>
+        <p>Response:
+            <span id="gpt-response"></span>
+        </p>
+    </section>
+
+    <section>
+        <h1>Delee</h1>
+        <input placeholder="Enter prompt you want to draw"  style="width: 600px"  id="dalle-prompt"/>
+        <button id="dalle-btn">Submit</button>
+        <img id="dalle"/>
+    </section>
+
+
+    <script>
+        document.getElementById('gpt-btn')
+            .addEventListener('click', async () => {
+                const gpt_prompt = document.getElementById('gpt-prompt').value;
+
+                if (gpt_prompt.trim()) {
+                    const res = await fetch(`/chat-gpt`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify([
+                            {
+                                role: 'user',
+                                content: gpt_prompt
+                            }
+                        ])
+                    });
+                    const data = await res.json();
+                    document.getElementById('gpt-response').innerHTML = data.content;
+                }
+            })
+
+        document.getElementById('dalle-btn')
+            .addEventListener('click', async () => {
+                const dalle_propmpt = document.getElementById('dalle-prompt').value;
+
+                if (dalle_propmpt.trim()) {
+                    const res = await fetch(`/dalle`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            prompt: dalle_propmpt
+                        })
+                    });
+                    const data = await res.json();
+                    document.getElementById('dalle').src = data[0].url;
+                }
+            })
+
+    </script>
+</body>
+</html>
